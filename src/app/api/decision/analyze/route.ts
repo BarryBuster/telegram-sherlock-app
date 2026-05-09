@@ -2,12 +2,12 @@ import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { CRITERIA, TOTAL_WEIGHT } from '@/lib/criteria';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 export async function POST(request: Request) {
   try {
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY || '',
+    });
+    
     const { context, optionA, optionB, locale = 'uk' } = await request.json();
 
     if (!context || !optionA || !optionB) {
