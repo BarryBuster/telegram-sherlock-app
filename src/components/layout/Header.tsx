@@ -6,7 +6,7 @@ export default function Header() {
   const reset = useDecisionStore((s) => s.reset);
 
   return (
-    <header className="sticky top-0 z-50 flex items-center justify-between border-b border-white/5 bg-[#0a0a1a]/90 px-4 py-3 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 flex items-center justify-between border-b border-white/[0.04] bg-[#080810]/95 px-4 py-3 backdrop-blur-xl">
       {/* Ліва іконка — Історія */}
       <button
         onClick={() => {/* TODO: відкрити історію */}}

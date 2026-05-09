@@ -11,7 +11,6 @@ export default function OptionsScreen() {
   const setScreen = useDecisionStore((s) => s.setScreen);
   const setActiveTab = useDecisionStore((s) => s.setActiveTab);
   const setResult = useDecisionStore((s) => s.setResult);
-  const setCriterionStatus = useDecisionStore((s) => s.setCriterionStatus);
   const setIsLoading = useDecisionStore((s) => s.setIsLoading);
   const setError = useDecisionStore((s) => s.setError);
   const isLoading = useDecisionStore((s) => s.isLoading);

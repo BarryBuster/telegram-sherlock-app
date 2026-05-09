@@ -47,7 +47,7 @@ export default function Home() {
   };
 
   return (
-    <div className="mx-auto min-h-dvh max-w-md bg-[#0a0a1a]">
+    <div className="mx-auto min-h-dvh max-w-md bg-[#080810]">
       <Header />
 
       {/* Повідомлення про помилку */}

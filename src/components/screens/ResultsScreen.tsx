@@ -19,7 +19,6 @@ export default function ResultsScreen() {
 
   const winner = result.recommendation;
   const winnerLabel = winner === 'A' ? optionA : optionB;
-  const diff = Math.abs(result.totalScoreA - result.totalScoreB);
 
   const strongA = result.criteria.filter((c) => c.scoreA > c.scoreB).length;
   const strongB = result.criteria.filter((c) => c.scoreB > c.scoreA).length;

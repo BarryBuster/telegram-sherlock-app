@@ -74,7 +74,6 @@ export default function AnalysisScreen() {
           const status = statuses[criterion.key] || 'pending';
           const isDone = status === 'done';
           const isAnalyzing = status === 'analyzing';
-          const isPending = status === 'pending';
 
           return (
             <div

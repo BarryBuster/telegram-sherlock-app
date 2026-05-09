@@ -7,7 +7,6 @@ export default function ContextScreen() {
   const context = useDecisionStore((s) => s.context);
   const setContext = useDecisionStore((s) => s.setContext);
   const setScreen = useDecisionStore((s) => s.setScreen);
-  const setActiveTab = useDecisionStore((s) => s.setActiveTab);
   const setOptionA = useDecisionStore((s) => s.setOptionA);
   const setOptionB = useDecisionStore((s) => s.setOptionB);
   const setIsLoading = useDecisionStore((s) => s.setIsLoading);
@@ -48,57 +47,78 @@ export default function ContextScreen() {
   };
 
   return (
-    <div className="flex min-h-[calc(100dvh-120px)] flex-col px-5 pt-8 pb-28">
-      {/* Заголовок */}
-      <div className="mb-8">
-        <h2 className="text-[2rem] font-bold leading-tight text-white/90">
+    <div className="flex min-h-[calc(100dvh-120px)] flex-col px-5 pt-10 pb-28">
+      {/* Заголовок — великий, лавандовий, як у макеті */}
+      <div className="mb-6">
+        <h2
+          className="font-extrabold leading-[1.05] tracking-tight"
+          style={{ fontSize: '2.5rem', color: '#9590c4' }}
+        >
           Опишіть
           <br />
           дилему.
         </h2>
-        <p className="mt-2 text-[15px] text-white/40">
+        <p className="mt-2.5 text-[14px]" style={{ color: 'rgba(255,255,255,0.35)' }}>
           Давайте розберемо це логічно.
         </p>
       </div>
 
-      {/* Поле вводу */}
-      <div className="mb-6">
-        <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-white/30">
-          Ваша ситуація
-        </label>
-        <div
-          className={`rounded-2xl border transition-all duration-300 ${
-            isFocused
-              ? 'border-indigo-500/50 shadow-[0_0_30px_-5px_rgba(99,102,241,0.15)]'
-              : 'border-white/8 hover:border-white/15'
-          } bg-white/[0.03]`}
-        >
-          <textarea
-            value={context}
-            onChange={(e) => setContext(e.target.value)}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            placeholder="Опишіть вашу ситуацію або рішення... наприклад, мені потрібно вибрати між пропозицією..."
-            rows={5}
-            className="w-full resize-none bg-transparent px-4 py-4 text-[15px] leading-relaxed text-white/80 placeholder:text-white/20 focus:outline-none"
-          />
-        </div>
-        {context.length > 0 && context.length < 20 && (
-          <p className="mt-2 text-xs text-amber-400/60">
-            Мінімум 20 символів для якісного аналізу ({context.length}/20)
-          </p>
-        )}
+      {/* Мітка поля */}
+      <label
+        className="mb-2 block text-[11px] font-semibold uppercase"
+        style={{ letterSpacing: '0.14em', color: 'rgba(255,255,255,0.22)' }}
+      >
+        Ваша ситуація
+      </label>
+
+      {/* Textarea — ледь помітна рамка, фон майже як у сторінки */}
+      <div
+        className="mb-5 overflow-hidden rounded-[22px] transition-all duration-300"
+        style={{
+          backgroundColor: 'rgba(255,255,255,0.02)',
+          border: isFocused
+            ? '1px solid rgba(130,120,220,0.2)'
+            : '1px solid rgba(255,255,255,0.04)',
+          boxShadow: isFocused
+            ? '0 0 30px -10px rgba(100,100,220,0.1)'
+            : 'none',
+        }}
+      >
+        <textarea
+          value={context}
+          onChange={(e) => setContext(e.target.value)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          placeholder="Опишіть вашу ситуацію або рішення... наприклад, мені потрібно вибрати між пропозицією..."
+          rows={6}
+          className="w-full resize-none bg-transparent px-5 py-4 text-[15px] leading-relaxed focus:outline-none"
+          style={{
+            color: 'rgba(255,255,255,0.6)',
+          }}
+        />
       </div>
 
-      {/* Кнопка */}
+      {/* Лічильник */}
+      {context.length > 0 && context.length < 20 && (
+        <p className="mb-3 -mt-3 text-xs" style={{ color: 'rgba(245,180,80,0.5)' }}>
+          Мінімум 20 символів ({context.length}/20)
+        </p>
+      )}
+
+      {/* Кнопка — м'який напівпрозорий градієнт */}
       <button
         onClick={handleSubmit}
         disabled={!canSubmit}
-        className={`group relative w-full overflow-hidden rounded-2xl px-6 py-4 text-[15px] font-semibold transition-all duration-300 ${
-          canSubmit
-            ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 active:scale-[0.98]'
-            : 'bg-white/5 text-white/20 cursor-not-allowed'
-        }`}
+        className="w-full overflow-hidden rounded-[22px] px-6 py-[15px] text-[16px] font-semibold transition-all duration-300 active:scale-[0.98]"
+        style={{
+          background: canSubmit
+            ? 'linear-gradient(135deg, #5b54e0 0%, #7c5fdf 50%, #9b6fed 100%)'
+            : 'linear-gradient(135deg, rgba(91,84,224,0.25) 0%, rgba(124,95,223,0.25) 50%, rgba(155,111,237,0.25) 100%)',
+          color: canSubmit ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.35)',
+          boxShadow: canSubmit
+            ? '0 6px 30px -6px rgba(91,84,224,0.35)'
+            : 'none',
+        }}
       >
         {isLoading ? (
           <span className="flex items-center justify-center gap-2">
@@ -115,12 +135,24 @@ export default function ContextScreen() {
         )}
       </button>
 
-      {/* Блок "Як працює" */}
-      <div className="mt-8 rounded-2xl bg-gradient-to-br from-indigo-500/[0.07] to-purple-500/[0.04] border border-indigo-500/10 px-5 py-5">
-        <h3 className="mb-2 text-base font-semibold text-indigo-300/90">
+      {/* Блок "Як працює" — чорний фон з ледь помітним синім відтінком */}
+      <div
+        className="mt-7 overflow-hidden rounded-[22px] px-5 py-5"
+        style={{
+          backgroundColor: 'rgba(14,14,30,0.7)',
+          border: '1px solid rgba(80,80,160,0.08)',
+        }}
+      >
+        <h3
+          className="mb-2.5 text-[16px] font-bold"
+          style={{ color: 'rgba(200,195,240,0.85)' }}
+        >
           Як працює Sherlock
         </h3>
-        <p className="text-[13px] leading-relaxed text-white/35">
+        <p
+          className="text-[13px] leading-[1.7]"
+          style={{ color: 'rgba(255,255,255,0.28)' }}
+        >
           Опишіть вашу дилему, і Sherlock миттєво структурує її за допомогою
           логіки матриці П&apos;ю. Ми зіставимо сценарії з еталоном, щоб підсвітити
           найкращий шлях, перетворюючи плутанину думок на прозоре та
