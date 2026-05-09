@@ -6,7 +6,9 @@ import { useDecisionStore } from '@/store/decisionStore';
 export default function DetailScreen() {
   const result = useDecisionStore((s) => s.result);
   const setScreen = useDecisionStore((s) => s.setScreen);
-  const [viewMode, setViewMode] = useState<'A' | 'B' | 'both'>('both');
+  const optionC = useDecisionStore((s) => s.optionC);
+  const [viewMode, setViewMode] = useState<'A' | 'B' | 'C' | 'all'>('all');
+  const isThreeOptions = optionC !== '' && result?.totalScoreC !== undefined;
 
   if (!result) return null;
 
@@ -43,15 +45,15 @@ export default function DetailScreen() {
         </div>
       </div>
 
-      {/* Перемикач Вар A / Вар B */}
+      {/* Перемикач Варіантів */}
       <div className="mb-6 flex items-center justify-end gap-1 rounded-xl bg-white/[0.04] p-1">
         <button
-          onClick={() => setViewMode('both')}
+          onClick={() => setViewMode('all')}
           className={`rounded-lg px-3 py-1.5 text-[11px] font-semibold transition-all ${
-            viewMode === 'both' ? 'bg-white/10 text-white/80' : 'text-white/30 hover:text-white/50'
+            viewMode === 'all' ? 'bg-white/10 text-white/80' : 'text-white/30 hover:text-white/50'
           }`}
         >
-          Обидва
+          Всі
         </button>
         <button
           onClick={() => setViewMode('A')}
@@ -69,6 +71,16 @@ export default function DetailScreen() {
         >
           Вар B
         </button>
+        {isThreeOptions && (
+          <button
+            onClick={() => setViewMode('C')}
+            className={`rounded-lg px-3 py-1.5 text-[11px] font-semibold transition-all ${
+              viewMode === 'C' ? 'bg-emerald-500/20 text-emerald-400' : 'text-white/30 hover:text-white/50'
+            }`}
+          >
+            Вар C
+          </button>
+        )}
       </div>
 
       {/* Критерії */}
@@ -89,8 +101,8 @@ export default function DetailScreen() {
             </div>
 
             {/* Картки варіантів */}
-            <div className={`grid gap-3 ${viewMode === 'both' ? 'grid-cols-2' : 'grid-cols-1'}`}>
-              {(viewMode === 'both' || viewMode === 'A') && (
+            <div className="grid gap-3 grid-cols-1">
+              {(viewMode === 'all' || viewMode === 'A') && (
                 <div className="rounded-xl border border-white/5 bg-white/[0.02] px-3 py-3">
                   <div className="mb-2 flex items-center justify-between">
                     <span className="text-xs font-medium text-white/40">Варіант A</span>
@@ -104,7 +116,7 @@ export default function DetailScreen() {
                 </div>
               )}
 
-              {(viewMode === 'both' || viewMode === 'B') && (
+              {(viewMode === 'all' || viewMode === 'B') && (
                 <div className="rounded-xl border border-white/5 bg-white/[0.02] px-3 py-3">
                   <div className="mb-2 flex items-center justify-between">
                     <span className="text-xs font-medium text-white/40">Варіант B</span>
@@ -114,6 +126,20 @@ export default function DetailScreen() {
                   </div>
                   <p className="text-[12px] leading-relaxed text-white/50">
                     {criterion.reasonB}
+                  </p>
+                </div>
+              )}
+
+              {isThreeOptions && (viewMode === 'all' || viewMode === 'C') && (
+                <div className="rounded-xl border border-white/5 bg-white/[0.02] px-3 py-3">
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-xs font-medium text-white/40">Варіант C</span>
+                    <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${getScoreColor(criterion.scoreC!)}`}>
+                      {criterion.scoreC! > 0 ? '+' : ''}{criterion.scoreC}
+                    </span>
+                  </div>
+                  <p className="text-[12px] leading-relaxed text-white/50">
+                    {criterion.reasonC}
                   </p>
                 </div>
               )}

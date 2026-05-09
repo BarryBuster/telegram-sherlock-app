@@ -5,8 +5,10 @@ import { useDecisionStore } from '@/store/decisionStore';
 export default function OptionsScreen() {
   const optionA = useDecisionStore((s) => s.optionA);
   const optionB = useDecisionStore((s) => s.optionB);
+  const optionC = useDecisionStore((s) => s.optionC);
   const setOptionA = useDecisionStore((s) => s.setOptionA);
   const setOptionB = useDecisionStore((s) => s.setOptionB);
+  const setOptionC = useDecisionStore((s) => s.setOptionC);
   const context = useDecisionStore((s) => s.context);
   const setScreen = useDecisionStore((s) => s.setScreen);
   const setActiveTab = useDecisionStore((s) => s.setActiveTab);
@@ -32,6 +34,7 @@ export default function OptionsScreen() {
           context: context.trim(),
           optionA: optionA.trim(),
           optionB: optionB.trim(),
+          optionC: optionC?.trim() || undefined,
           locale: 'uk',
         }),
       });
@@ -114,6 +117,36 @@ export default function OptionsScreen() {
           />
         </div>
       </div>
+
+      {/* Варіант C (Опціонально) */}
+      {optionC !== '' && (
+        <>
+          <div className="my-3 -mt-4 mb-4 flex items-center justify-center">
+            <span className="rounded-full bg-white/[0.06] px-3 py-1 text-xs font-bold tracking-wider text-white/30">
+              vs
+            </span>
+          </div>
+          <div className="mb-8">
+            <div className="mb-2 flex items-center gap-2">
+              <span className="flex h-6 w-6 items-center justify-center rounded-md bg-emerald-500/20 text-xs font-bold text-emerald-400">
+                C
+              </span>
+              <span className="text-xs font-semibold uppercase tracking-widest text-white/30">
+                Варіант В
+              </span>
+            </div>
+            <div className="rounded-2xl border border-emerald-500/20 bg-white/[0.03] transition-all duration-200 focus-within:border-emerald-500/40 focus-within:shadow-[0_0_30px_-5px_rgba(16,185,129,0.12)]">
+              <textarea
+                value={optionC}
+                onChange={(e) => setOptionC(e.target.value)}
+                rows={3}
+                className="w-full resize-none bg-transparent px-4 py-3.5 text-[15px] leading-relaxed text-white/80 placeholder:text-white/20 focus:outline-none"
+                placeholder="Опишіть варіант В..."
+              />
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Кнопка */}
       <button

@@ -14,9 +14,11 @@ interface DecisionState {
   context: string;
   optionA: string;
   optionB: string;
+  optionC: string;
   setContext: (text: string) => void;
   setOptionA: (text: string) => void;
   setOptionB: (text: string) => void;
+  setOptionC: (text: string) => void;
 
   // Аналіз
   criteriaStatuses: Record<string, CriterionStatus>;
@@ -65,9 +67,11 @@ export const useDecisionStore = create<DecisionState>((set, get) => ({
   context: '',
   optionA: '',
   optionB: '',
+  optionC: '',
   setContext: (text) => set({ context: text }),
   setOptionA: (text) => set({ optionA: text }),
   setOptionB: (text) => set({ optionB: text }),
+  setOptionC: (text) => set({ optionC: text }),
 
   // Аналіз
   criteriaStatuses: {},
@@ -110,6 +114,7 @@ export const useDecisionStore = create<DecisionState>((set, get) => ({
       context: '',
       optionA: '',
       optionB: '',
+      optionC: '',
       criteriaStatuses: {},
       result: null,
       selectedCriterionIndex: 0,

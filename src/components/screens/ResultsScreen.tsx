@@ -6,6 +6,7 @@ export default function ResultsScreen() {
   const result = useDecisionStore((s) => s.result);
   const optionA = useDecisionStore((s) => s.optionA);
   const optionB = useDecisionStore((s) => s.optionB);
+  const optionC = useDecisionStore((s) => s.optionC);
   const setScreen = useDecisionStore((s) => s.setScreen);
   const reset = useDecisionStore((s) => s.reset);
 
@@ -18,22 +19,24 @@ export default function ResultsScreen() {
   }
 
   const winner = result.recommendation;
-  const winnerLabel = winner === 'A' ? optionA : optionB;
+  let winnerLabel = winner === 'A' ? optionA : winner === 'B' ? optionB : winner === 'C' ? optionC : 'Нічия';
 
-  const strongA = result.criteria.filter((c) => c.scoreA > c.scoreB).length;
-  const strongB = result.criteria.filter((c) => c.scoreB > c.scoreA).length;
-  const weakA = result.criteria.filter((c) => c.scoreA < c.scoreB).length;
-  const weakB = result.criteria.filter((c) => c.scoreB < c.scoreA).length;
+  const isThreeOptions = optionC !== '' && result.totalScoreC !== undefined;
 
-  const maxScore = Math.max(Math.abs(result.totalScoreA), Math.abs(result.totalScoreB), 1);
+  const strongA = result.criteria.filter((c) => c.scoreA > c.scoreB && (!isThreeOptions || c.scoreA > c.scoreC!)).length;
+  const strongB = result.criteria.filter((c) => c.scoreB > c.scoreA && (!isThreeOptions || c.scoreB > c.scoreC!)).length;
+  const strongC = isThreeOptions ? result.criteria.filter((c) => c.scoreC! > c.scoreA && c.scoreC! > c.scoreB).length : 0;
+
+  const maxScore = Math.max(Math.abs(result.totalScoreA), Math.abs(result.totalScoreB), isThreeOptions ? Math.abs(result.totalScoreC!) : 1, 1);
 
   const handleExport = async () => {
     const text = `🔍 Sherlock — Рішення прийнято\n\n` +
-      `✅ Рекомендований варіант: ${winner === 'A' ? 'A' : 'B'}\n` +
+      `✅ Рекомендований варіант: ${winner === 'TIE' ? 'Нічия' : winner}\n` +
       `${winnerLabel}\n\n` +
-      `❌ Альтернатива: ${winner === 'A' ? 'B' : 'A'}\n` +
-      `${winner === 'A' ? optionB : optionA}\n\n` +
-      `📊 Фінальний бал: +${result.totalScoreA} vs +${result.totalScoreB}\n\n` +
+      `📊 Фінальні бали:\n` +
+      `A: +${result.totalScoreA} (${optionA})\n` +
+      `B: +${result.totalScoreB} (${optionB})\n` +
+      (isThreeOptions ? `C: +${result.totalScoreC} (${optionC})\n\n` : `\n`) +
       `💡 Резюме:\n${result.summary}\n\n` +
       `—\nПроаналізовано за допомогою Sherlock`;
 
@@ -73,14 +76,14 @@ export default function ResultsScreen() {
         <div className="mb-2 flex items-center justify-center gap-2">
           <span className="text-lg">🏅</span>
           <span className="text-[11px] font-semibold uppercase tracking-widest text-indigo-400/70">
-            Рекомендований варіант
+            {winner === 'TIE' ? 'Нічия' : 'Рекомендований варіант'}
           </span>
         </div>
         <p className="text-[15px] font-semibold text-white/80">
-          Варіант {winner}: {winnerLabel.length > 60 ? winnerLabel.slice(0, 60) + '…' : winnerLabel}
+          {winner === 'TIE' ? 'Варіанти набрали однакову кількість балів' : `Варіант ${winner}: ${winnerLabel.length > 60 ? winnerLabel.slice(0, 60) + '…' : winnerLabel}`}
         </p>
         <p className="mt-2 text-sm text-indigo-300/50">
-          Фінальний бал: +{winner === 'A' ? result.totalScoreA : result.totalScoreB}
+          Фінальний бал: {winner === 'TIE' ? '—' : `+${winner === 'A' ? result.totalScoreA : winner === 'B' ? result.totalScoreB : result.totalScoreC}`}
         </p>
       </div>
 
@@ -102,11 +105,11 @@ export default function ResultsScreen() {
           <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/5">
             <div
               className="h-full rounded-full bg-indigo-500 transition-all duration-700"
-              style={{ width: `${(result.totalScoreA / maxScore) * 100}%` }}
+              style={{ width: `${(Math.abs(result.totalScoreA) / maxScore) * 100}%` }}
             />
           </div>
           <p className="mt-2 text-xs text-white/30">
-            Сильні сторони: {strongA} · Слабкі сторони: {weakA}
+            Переваг за критеріями: {strongA}
           </p>
         </div>
 
@@ -126,13 +129,39 @@ export default function ResultsScreen() {
           <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/5">
             <div
               className="h-full rounded-full bg-purple-500 transition-all duration-700"
-              style={{ width: `${(result.totalScoreB / maxScore) * 100}%` }}
+              style={{ width: `${(Math.abs(result.totalScoreB) / maxScore) * 100}%` }}
             />
           </div>
           <p className="mt-2 text-xs text-white/30">
-            Сильні сторони: {strongB} · Слабкі сторони: {weakB}
+            Переваг за критеріями: {strongB}
           </p>
         </div>
+
+        {/* Варіант C */}
+        {isThreeOptions && (
+          <div className="rounded-xl border border-white/5 bg-white/[0.02] px-4 py-3.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[14px] font-medium text-white/60">Варіант C</span>
+              {winner === 'C' && (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-emerald-400">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              )}
+            </div>
+            <p className="mt-1 text-2xl font-bold text-white/80">
+              +{result.totalScoreC} <span className="text-sm font-normal text-white/30">балів</span>
+            </p>
+            <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/5">
+              <div
+                className="h-full rounded-full bg-emerald-500 transition-all duration-700"
+                style={{ width: `${(Math.abs(result.totalScoreC!) / maxScore) * 100}%` }}
+              />
+            </div>
+            <p className="mt-2 text-xs text-white/30">
+              Переваг за критеріями: {strongC}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Резюме */}

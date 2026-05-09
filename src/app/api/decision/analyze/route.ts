@@ -8,7 +8,7 @@ export async function POST(request: Request) {
       apiKey: process.env.OPENAI_API_KEY || '',
     });
     
-    const { context, optionA, optionB, locale = 'uk' } = await request.json();
+    const { context, optionA, optionB, optionC, locale = 'uk' } = await request.json();
 
     if (!context || !optionA || !optionB) {
       return NextResponse.json(
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
           role: 'system',
           content: `Ти — експертний аналітик для прийняття рішень. Застосовуй метод зваженої оцінки (матриця П'ю).
 
-КОНТЕКСТ: Користувач вибирає між двома варіантами. Ти маєш оцінити кожен варіант за кожним з 8 критеріїв.
+КОНТЕКСТ: Користувач вибирає між ${optionC ? 'трьома' : 'двома'} варіантами. Ти маєш оцінити кожен варіант за кожним з 8 критеріїв.
 
 КРИТЕРІЇ (з вагами):
 ${criteriaPrompt}
@@ -49,8 +49,10 @@ ${criteriaPrompt}
       "key": "cost",
       "scoreA": <число від -100 до 100>,
       "scoreB": <число від -100 до 100>,
+      ${optionC ? '"scoreC": <число від -100 до 100>,' : ''}
       "reasonA": "<коротке обґрунтування для варіанту A, 1-2 речення>",
       "reasonB": "<коротке обґрунтування для варіанту B, 1-2 речення>"
+      ${optionC ? ',"reasonC": "<коротке обґрунтування для варіанту C, 1-2 речення>"' : ''}
     }
     // ... для кожного з 8 критеріїв
   ],
@@ -70,7 +72,7 @@ ${criteriaPrompt}
 
 ВАРІАНТ A: ${optionA}
 
-ВАРІАНТ B: ${optionB}`,
+ВАРІАНТ B: ${optionB}${optionC ? `\n\nВАРІАНТ C: ${optionC}` : ''}`,
         },
       ],
     });
@@ -97,29 +99,52 @@ ${criteriaPrompt}
         weight: config.weight,
         scoreA: found?.scoreA ?? 0,
         scoreB: found?.scoreB ?? 0,
+        scoreC: found?.scoreC ?? (optionC ? 0 : undefined),
         reasonA: found?.reasonA ?? '',
         reasonB: found?.reasonB ?? '',
+        reasonC: found?.reasonC ?? (optionC ? '' : undefined),
       };
     });
 
     // Обчислюємо зважені підсумкові бали
     let totalScoreA = 0;
     let totalScoreB = 0;
+    let totalScoreC = 0;
 
     for (const c of enrichedCriteria) {
       totalScoreA += (c.scoreA * c.weight) / TOTAL_WEIGHT;
       totalScoreB += (c.scoreB * c.weight) / TOTAL_WEIGHT;
+      if (optionC && c.scoreC !== undefined) {
+        totalScoreC += (c.scoreC * c.weight) / TOTAL_WEIGHT;
+      }
     }
 
     totalScoreA = Math.round(totalScoreA);
     totalScoreB = Math.round(totalScoreB);
+    totalScoreC = Math.round(totalScoreC);
 
-    const recommendation: 'A' | 'B' = totalScoreA >= totalScoreB ? 'A' : 'B';
+    let recommendation: 'A' | 'B' | 'C' | 'TIE' = 'TIE';
+    if (!optionC) {
+      recommendation = totalScoreA > totalScoreB ? 'A' : totalScoreA < totalScoreB ? 'B' : 'TIE';
+    } else {
+      const maxScore = Math.max(totalScoreA, totalScoreB, totalScoreC);
+      const isTie = [totalScoreA, totalScoreB, totalScoreC].filter(s => s === maxScore).length > 1;
+      if (isTie) {
+        recommendation = 'TIE';
+      } else if (maxScore === totalScoreA) {
+        recommendation = 'A';
+      } else if (maxScore === totalScoreB) {
+        recommendation = 'B';
+      } else {
+        recommendation = 'C';
+      }
+    }
 
     return NextResponse.json({
       criteria: enrichedCriteria,
       totalScoreA,
       totalScoreB,
+      totalScoreC: optionC ? totalScoreC : undefined,
       recommendation,
       summary: parsed.summary || '',
     });
