@@ -34,9 +34,9 @@ export default function ResultsScreen() {
       `✅ Рекомендований варіант: ${winner === 'TIE' ? 'Нічия' : winner}\n` +
       `${winnerLabel}\n\n` +
       `📊 Фінальні бали:\n` +
-      `A: +${result.totalScoreA} (${optionA})\n` +
-      `B: +${result.totalScoreB} (${optionB})\n` +
-      (isThreeOptions ? `C: +${result.totalScoreC} (${optionC})\n\n` : `\n`) +
+      `A: ${result.totalScoreA > 0 ? '+' : ''}${result.totalScoreA} (${optionA})\n` +
+      `B: ${result.totalScoreB > 0 ? '+' : ''}${result.totalScoreB} (${optionB})\n` +
+      (isThreeOptions ? `C: ${result.totalScoreC! > 0 ? '+' : ''}${result.totalScoreC} (${optionC})\n\n` : `\n`) +
       `💡 Резюме:\n${result.summary}\n\n` +
       `—\nПроаналізовано за допомогою Sherlock`;
 
@@ -83,7 +83,7 @@ export default function ResultsScreen() {
           {winner === 'TIE' ? 'Варіанти набрали однакову кількість балів' : `Варіант ${winner}: ${winnerLabel.length > 60 ? winnerLabel.slice(0, 60) + '…' : winnerLabel}`}
         </p>
         <p className="mt-2 text-sm text-indigo-300/50">
-          Фінальний бал: {winner === 'TIE' ? '—' : `+${winner === 'A' ? result.totalScoreA : winner === 'B' ? result.totalScoreB : result.totalScoreC}`}
+          Фінальний бал: {winner === 'TIE' ? '—' : `${(winner === 'A' ? result.totalScoreA : winner === 'B' ? result.totalScoreB : result.totalScoreC!) > 0 ? '+' : ''}${winner === 'A' ? result.totalScoreA : winner === 'B' ? result.totalScoreB : result.totalScoreC}`}
         </p>
       </div>
 
@@ -100,7 +100,7 @@ export default function ResultsScreen() {
             )}
           </div>
           <p className="mt-1 text-2xl font-bold text-white/80">
-            +{result.totalScoreA} <span className="text-sm font-normal text-white/30">балів</span>
+            {result.totalScoreA > 0 ? '+' : ''}{result.totalScoreA} <span className="text-sm font-normal text-white/30">балів</span>
           </p>
           <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/5">
             <div
@@ -124,7 +124,7 @@ export default function ResultsScreen() {
             )}
           </div>
           <p className="mt-1 text-2xl font-bold text-white/80">
-            +{result.totalScoreB} <span className="text-sm font-normal text-white/30">балів</span>
+            {result.totalScoreB > 0 ? '+' : ''}{result.totalScoreB} <span className="text-sm font-normal text-white/30">балів</span>
           </p>
           <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/5">
             <div
@@ -149,7 +149,7 @@ export default function ResultsScreen() {
               )}
             </div>
             <p className="mt-1 text-2xl font-bold text-white/80">
-              +{result.totalScoreC} <span className="text-sm font-normal text-white/30">балів</span>
+              {result.totalScoreC! > 0 ? '+' : ''}{result.totalScoreC} <span className="text-sm font-normal text-white/30">балів</span>
             </p>
             <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/5">
               <div

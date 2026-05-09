@@ -56,13 +56,13 @@ ${criteriaPrompt}
     }
     // ... для кожного з 8 критеріїв
   ],
-  "summary": "<загальне резюме аналізу, 3-4 речення, з поясненням, чому один варіант кращий>"
+  "summary": "<загальне резюме аналізу, 3-4 речення. Якщо бали варіантів дуже близькі або рівні, обов'язково зазнач це і порадь користувачу звернути увагу на найважливіший для нього критерій або довіритися інтуїції. Якщо є чіткий переможець, поясни чому.>"
 }
 
 ПРАВИЛА:
 - Бали від -100 (дуже погано) до +100 (дуже добре) для кожного варіанту.
 - Обґрунтування має бути конкретним, з фактами з контексту.
-- Резюме має чітко назвати рекомендований варіант і пояснити чому.
+- Резюме має бути чесним: якщо варіанти рівноцінні, не вигадуй переможця.
 - Відповідай ${locale === 'uk' ? 'українською' : 'англійською'} мовою.
 - Будь об'єктивним і збалансованим.`,
         },
@@ -77,12 +77,8 @@ ${criteriaPrompt}
       ],
     });
 
-    const raw = completion.choices[0]?.message?.content;
-    if (!raw) {
-      throw new Error('Порожня відповідь від моделі');
-    }
-
-    const parsed = JSON.parse(raw);
+    const responseText = completion.choices[0].message.content || '{}';
+    const parsed = JSON.parse(responseText);
 
     if (!parsed.criteria || !Array.isArray(parsed.criteria)) {
       throw new Error('Невалідний формат відповіді');
@@ -119,32 +115,30 @@ ${criteriaPrompt}
       }
     }
 
-    totalScoreA = Math.round(totalScoreA);
-    totalScoreB = Math.round(totalScoreB);
-    totalScoreC = Math.round(totalScoreC);
+    // Використовуємо 1 знак після коми для точності
+    const finalA = Number(totalScoreA.toFixed(1));
+    const finalB = Number(totalScoreB.toFixed(1));
+    const finalC = optionC ? Number(totalScoreC.toFixed(1)) : 0;
 
     let recommendation: 'A' | 'B' | 'C' | 'TIE' = 'TIE';
-    if (!optionC) {
-      recommendation = totalScoreA > totalScoreB ? 'A' : totalScoreA < totalScoreB ? 'B' : 'TIE';
+    const maxScore = Math.max(finalA, finalB, optionC ? finalC : -Infinity);
+    
+    const candidates = [];
+    if (finalA === maxScore) candidates.push('A');
+    if (finalB === maxScore) candidates.push('B');
+    if (optionC && finalC === maxScore) candidates.push('C');
+
+    if (candidates.length > 1) {
+      recommendation = 'TIE';
     } else {
-      const maxScore = Math.max(totalScoreA, totalScoreB, totalScoreC);
-      const isTie = [totalScoreA, totalScoreB, totalScoreC].filter(s => s === maxScore).length > 1;
-      if (isTie) {
-        recommendation = 'TIE';
-      } else if (maxScore === totalScoreA) {
-        recommendation = 'A';
-      } else if (maxScore === totalScoreB) {
-        recommendation = 'B';
-      } else {
-        recommendation = 'C';
-      }
+      recommendation = candidates[0] as 'A' | 'B' | 'C';
     }
 
     return NextResponse.json({
       criteria: enrichedCriteria,
-      totalScoreA,
-      totalScoreB,
-      totalScoreC: optionC ? totalScoreC : undefined,
+      totalScoreA: finalA,
+      totalScoreB: finalB,
+      totalScoreC: optionC ? finalC : undefined,
       recommendation,
       summary: parsed.summary || '',
     });
