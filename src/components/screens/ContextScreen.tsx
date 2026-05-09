@@ -9,6 +9,7 @@ export default function ContextScreen() {
   const setScreen = useDecisionStore((s) => s.setScreen);
   const setOptionA = useDecisionStore((s) => s.setOptionA);
   const setOptionB = useDecisionStore((s) => s.setOptionB);
+  const setOptionC = useDecisionStore((s) => s.setOptionC);
   const setIsLoading = useDecisionStore((s) => s.setIsLoading);
   const setError = useDecisionStore((s) => s.setError);
   const isLoading = useDecisionStore((s) => s.isLoading);
@@ -34,9 +35,10 @@ export default function ContextScreen() {
         throw new Error(data.error || 'Помилка витягу варіантів');
       }
 
-      const { optionA, optionB } = await res.json();
+      const { optionA, optionB, optionC } = await res.json();
       setOptionA(optionA);
       setOptionB(optionB);
+      setOptionC(optionC || '');
       setScreen('options');
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Невідома помилка';

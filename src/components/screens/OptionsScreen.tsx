@@ -119,14 +119,22 @@ export default function OptionsScreen() {
       </div>
 
       {/* Варіант C (Опціонально) */}
-      {optionC !== '' && (
+      {optionC !== '' ? (
         <>
           <div className="my-3 -mt-4 mb-4 flex items-center justify-center">
             <span className="rounded-full bg-white/[0.06] px-3 py-1 text-xs font-bold tracking-wider text-white/30">
               vs
             </span>
           </div>
-          <div className="mb-8">
+          <div className="mb-8 relative">
+            <button 
+              onClick={() => setOptionC('')}
+              className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-white/5 text-white/30 hover:bg-red-500/20 hover:text-red-400 transition-colors z-10"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
             <div className="mb-2 flex items-center gap-2">
               <span className="flex h-6 w-6 items-center justify-center rounded-md bg-emerald-500/20 text-xs font-bold text-emerald-400">
                 C
@@ -141,11 +149,21 @@ export default function OptionsScreen() {
                 onChange={(e) => setOptionC(e.target.value)}
                 rows={3}
                 className="w-full resize-none bg-transparent px-4 py-3.5 text-[15px] leading-relaxed text-white/80 placeholder:text-white/20 focus:outline-none"
-                placeholder="Опишіть варіант В..."
+                placeholder="Опишіть третій варіант..."
               />
             </div>
           </div>
         </>
+      ) : (
+        <button
+          onClick={() => setOptionC(' ')}
+          className="mb-8 flex items-center justify-center gap-2 rounded-xl border border-dashed border-white/10 py-4 text-xs font-bold uppercase tracking-widest text-white/20 transition-all hover:border-white/20 hover:text-white/40"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+            <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Додати третій варіант
+        </button>
       )}
 
       {/* Кнопка */}
