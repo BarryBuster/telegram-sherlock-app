@@ -42,6 +42,9 @@ export default function AnalysisScreen() {
     }
   };
 
+  const isAllDone = Object.values(statuses).every((s) => s === 'done');
+  const isAnyAnalyzing = Object.values(statuses).some((s) => s === 'analyzing');
+
   return (
     <div className="flex min-h-[calc(100dvh-120px)] flex-col px-5 pt-8 pb-28">
       {/* Іконка */}
@@ -148,10 +151,23 @@ export default function AnalysisScreen() {
       </div>
 
       {/* Підсказка для analyzing */}
-      {Object.values(statuses).some((s) => s === 'analyzing') && (
+      {isAnyAnalyzing && !isAllDone && (
         <div className="mt-4 rounded-xl bg-indigo-500/[0.06] border border-indigo-500/10 px-4 py-3">
           <p className="text-xs text-indigo-300/60">
-            Іде обробка ймовірностей відмов… ⏳
+            Іде оцінка ймовірностей відмов… ⏳
+          </p>
+        </div>
+      )}
+
+      {/* Підсказка для фіналізації (коли всі критерії done, але ми ще чекаємо на API) */}
+      {isAllDone && (
+        <div className="mt-4 flex items-center justify-center gap-3 rounded-xl bg-purple-500/[0.06] border border-purple-500/10 px-4 py-4 transition-all duration-500 animate-in fade-in slide-in-from-bottom-2">
+          <svg className="h-4 w-4 animate-spin text-purple-400" viewBox="0 0 24 24" fill="none">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          </svg>
+          <p className="text-xs font-medium tracking-wide text-purple-300/80">
+            Зважуємо бали та формуємо висновок...
           </p>
         </div>
       )}
