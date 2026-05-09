@@ -49,14 +49,14 @@ export default function ContextScreen() {
   return (
     <div className="flex min-h-[calc(100dvh-120px)] flex-col px-5 pt-10 pb-28">
       {/* Заголовок — великий, лавандовий, як у макеті */}
-      <div className="mb-6">
+      <div className="mb-6 text-center">
         <h2
           className="font-extrabold leading-[1.05] tracking-tight"
           style={{ fontSize: '2.5rem', color: '#9590c4' }}
         >
           Опишіть
           <br />
-          дилему.
+          дилему
         </h2>
         <p className="mt-2.5 text-[14px]" style={{ color: 'rgba(255,255,255,0.35)' }}>
           Давайте розберемо це логічно.
