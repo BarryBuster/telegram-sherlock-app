@@ -37,13 +37,25 @@ export default function BottomNav() {
   const activeTab = useDecisionStore((s) => s.activeTab);
   const setActiveTab = useDecisionStore((s) => s.setActiveTab);
   const result = useDecisionStore((s) => s.result);
+  const context = useDecisionStore((s) => s.context);
+  const optionA = useDecisionStore((s) => s.optionA);
+  const optionB = useDecisionStore((s) => s.optionB);
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 nm-convex border-t border-white/5 pb-[env(safe-area-inset-bottom)]">
       <div className="mx-auto flex max-w-md items-center justify-around py-3">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.key;
-          const isDisabled = tab.key === 'results' && !result;
+          
+          // Логіка блокування вкладок
+          let isDisabled = false;
+          if (tab.key === 'analysis') {
+            const contextValid = context.trim().length >= 20;
+            const optionsValid = optionA.trim().length > 0 && optionB.trim().length > 0;
+            isDisabled = !contextValid || !optionsValid;
+          } else if (tab.key === 'results') {
+            isDisabled = !result;
+          }
 
           return (
             <button
@@ -54,7 +66,7 @@ export default function BottomNav() {
                 isActive
                   ? 'nm-inset text-indigo-400'
                   : isDisabled
-                    ? 'text-white/5 cursor-not-allowed'
+                    ? 'opacity-10 cursor-not-allowed grayscale'
                     : 'text-white/20 hover:text-white/40'
               }`}
             >
