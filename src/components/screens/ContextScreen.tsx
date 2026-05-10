@@ -50,77 +50,57 @@ export default function ContextScreen() {
 
   return (
     <div className="flex min-h-[calc(100dvh-120px)] flex-col px-5 pt-10 pb-28">
-      {/* Заголовок — великий, лавандовий, як у макеті */}
+      {/* Заголовок */}
       <div className="mb-6 text-center">
         <h2
           className="font-extrabold leading-[1.05] tracking-tight"
-          style={{ fontSize: '2.5rem', color: '#9590c4' }}
+          style={{ fontSize: '2.5rem', color: 'var(--nm-accent-light)' }}
         >
           Опишіть
           <br />
           дилему
         </h2>
-        <p className="mt-2.5 text-[14px]" style={{ color: 'rgba(255,255,255,0.35)' }}>
+        <p className="mt-2.5 text-[14px] text-white/30">
           Давайте розберемо це логічно.
         </p>
       </div>
 
       {/* Мітка поля */}
       <label
-        className="mb-2 block text-[11px] font-semibold uppercase"
-        style={{ letterSpacing: '0.14em', color: 'rgba(255,255,255,0.22)' }}
+        className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.14em] text-white/20"
       >
         Ваша ситуація
       </label>
 
-      {/* Textarea — ледь помітна рамка, фон майже як у сторінки */}
+      {/* Textarea — Neumorphic Inset */}
       <div
-        className="mb-5 overflow-hidden rounded-[22px] transition-all duration-300"
-        style={{
-          backgroundColor: 'rgba(255,255,255,0.02)',
-          border: isFocused
-            ? '1px solid rgba(130,120,220,0.2)'
-            : '1px solid rgba(255,255,255,0.04)',
-          boxShadow: isFocused
-            ? '0 0 30px -10px rgba(100,100,220,0.1)'
-            : 'none',
-        }}
+        className={`mb-5 overflow-hidden rounded-[22px] nm-inset transition-all duration-300 ${isFocused ? 'ring-1 ring-indigo-500/30' : ''}`}
       >
         <textarea
           value={context}
           onChange={(e) => setContext(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          placeholder="Опишіть вашу ситуацію або рішення... наприклад, мені потрібно вибрати між пропозицією..."
+          placeholder="Опишіть вашу ситуацію або рішення..."
           rows={6}
-          className="w-full resize-none bg-transparent px-5 py-4 text-[15px] leading-relaxed focus:outline-none"
-          style={{
-            color: 'rgba(255,255,255,0.6)',
-          }}
+          className="w-full resize-none bg-transparent px-5 py-4 text-[15px] leading-relaxed text-white/70 focus:outline-none"
         />
       </div>
 
       {/* Лічильник */}
       {context.length > 0 && context.length < 20 && (
-        <p className="mb-3 -mt-3 text-xs" style={{ color: 'rgba(245,180,80,0.5)' }}>
+        <p className="mb-3 -mt-3 text-xs text-orange-400/50">
           Мінімум 20 символів ({context.length}/20)
         </p>
       )}
 
-      {/* Кнопка — м'який напівпрозорий градієнт */}
+      {/* Кнопка — Neumorphic Accent Button */}
       <button
         onClick={handleSubmit}
         disabled={!canSubmit}
-        className="w-full overflow-hidden rounded-[22px] px-6 py-[15px] text-[16px] font-semibold transition-all duration-300 active:scale-[0.98]"
-        style={{
-          background: canSubmit
-            ? 'linear-gradient(135deg, #5b54e0 0%, #7c5fdf 50%, #9b6fed 100%)'
-            : 'linear-gradient(135deg, rgba(91,84,224,0.25) 0%, rgba(124,95,223,0.25) 50%, rgba(155,111,237,0.25) 100%)',
-          color: canSubmit ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.35)',
-          boxShadow: canSubmit
-            ? '0 6px 30px -6px rgba(91,84,224,0.35)'
-            : 'none',
-        }}
+        className={`w-full rounded-[22px] px-6 py-[15px] text-[16px] font-semibold transition-all duration-300 ${
+          canSubmit ? 'nm-accent-button text-white' : 'nm-flat text-white/20'
+        }`}
       >
         {isLoading ? (
           <span className="flex items-center justify-center gap-2">
@@ -137,23 +117,17 @@ export default function ContextScreen() {
         )}
       </button>
 
-      {/* Блок "Як працює" — чорний фон з ледь помітним синім відтінком */}
+      {/* Блок "Як працює" — Neumorphic Flat Card */}
       <div
-        className="mt-7 overflow-hidden rounded-[22px] px-5 py-5"
-        style={{
-          backgroundColor: 'rgba(14,14,30,0.7)',
-          border: '1px solid rgba(80,80,160,0.08)',
-        }}
+        className="mt-7 rounded-[22px] nm-flat px-5 py-5"
       >
         <h3
-          className="mb-2.5 text-[16px] font-bold"
-          style={{ color: 'rgba(200,195,240,0.85)' }}
+          className="mb-2.5 text-[16px] font-bold text-white/70"
         >
           Як працює Sherlock
         </h3>
         <p
-          className="text-[13px] leading-[1.7]"
-          style={{ color: 'rgba(255,255,255,0.28)' }}
+          className="text-[13px] leading-[1.7] text-white/30"
         >
           Опишіть вашу дилему, і Sherlock миттєво структурує її за допомогою
           логіки матриці П&apos;ю. Ми зіставимо сценарії з еталоном, щоб підсвітити

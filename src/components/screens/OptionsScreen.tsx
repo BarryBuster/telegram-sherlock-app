@@ -72,14 +72,14 @@ export default function OptionsScreen() {
       {/* Варіант A */}
       <div className="mb-4">
         <div className="mb-2 flex items-center gap-2">
-          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-indigo-500/20 text-xs font-bold text-indigo-400">
+          <span className="flex h-6 w-6 items-center justify-center rounded-md nm-flat-sm text-xs font-bold text-indigo-400">
             A
           </span>
           <span className="text-xs font-semibold uppercase tracking-widest text-white/30">
             Варіант А
           </span>
         </div>
-        <div className="rounded-2xl border border-indigo-500/20 bg-white/[0.03] transition-all duration-200 focus-within:border-indigo-500/40 focus-within:shadow-[0_0_30px_-5px_rgba(99,102,241,0.12)]">
+        <div className="rounded-2xl nm-inset transition-all duration-200 focus-within:ring-1 focus-within:ring-indigo-500/30">
           <textarea
             value={optionA}
             onChange={(e) => setOptionA(e.target.value)}
@@ -92,7 +92,7 @@ export default function OptionsScreen() {
 
       {/* VS роздільник */}
       <div className="my-3 flex items-center justify-center">
-        <span className="rounded-full bg-white/[0.06] px-3 py-1 text-xs font-bold tracking-wider text-white/30">
+        <span className="rounded-full nm-flat-sm px-4 py-1 text-xs font-bold tracking-wider text-white/20">
           vs
         </span>
       </div>
@@ -100,14 +100,14 @@ export default function OptionsScreen() {
       {/* Варіант B */}
       <div className="mb-8">
         <div className="mb-2 flex items-center gap-2">
-          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-purple-500/20 text-xs font-bold text-purple-400">
+          <span className="flex h-6 w-6 items-center justify-center rounded-md nm-flat-sm text-xs font-bold text-purple-400">
             B
           </span>
           <span className="text-xs font-semibold uppercase tracking-widest text-white/30">
             Варіант Б
           </span>
         </div>
-        <div className="rounded-2xl border border-purple-500/20 bg-white/[0.03] transition-all duration-200 focus-within:border-purple-500/40 focus-within:shadow-[0_0_30px_-5px_rgba(168,85,247,0.12)]">
+        <div className="rounded-2xl nm-inset transition-all duration-200 focus-within:ring-1 focus-within:ring-purple-500/30">
           <textarea
             value={optionB}
             onChange={(e) => setOptionB(e.target.value)}
@@ -122,28 +122,28 @@ export default function OptionsScreen() {
       {optionC !== '' ? (
         <>
           <div className="my-3 -mt-4 mb-4 flex items-center justify-center">
-            <span className="rounded-full bg-white/[0.06] px-3 py-1 text-xs font-bold tracking-wider text-white/30">
+            <span className="rounded-full nm-flat-sm px-4 py-1 text-xs font-bold tracking-wider text-white/20">
               vs
             </span>
           </div>
           <div className="mb-8 relative">
             <button 
               onClick={() => setOptionC('')}
-              className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-white/5 text-white/30 hover:bg-red-500/20 hover:text-red-400 transition-colors z-10"
+              className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full nm-flat-sm text-white/30 hover:text-red-400 transition-colors z-10"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </button>
             <div className="mb-2 flex items-center gap-2">
-              <span className="flex h-6 w-6 items-center justify-center rounded-md bg-emerald-500/20 text-xs font-bold text-emerald-400">
+              <span className="flex h-6 w-6 items-center justify-center rounded-md nm-flat-sm text-xs font-bold text-emerald-400">
                 C
               </span>
               <span className="text-xs font-semibold uppercase tracking-widest text-white/30">
                 Варіант В
               </span>
             </div>
-            <div className="rounded-2xl border border-emerald-500/20 bg-white/[0.03] transition-all duration-200 focus-within:border-emerald-500/40 focus-within:shadow-[0_0_30px_-5px_rgba(16,185,129,0.12)]">
+            <div className="rounded-2xl nm-inset transition-all duration-200 focus-within:ring-1 focus-within:ring-emerald-500/30">
               <textarea
                 value={optionC}
                 onChange={(e) => setOptionC(e.target.value)}
@@ -157,7 +157,7 @@ export default function OptionsScreen() {
       ) : (
         <button
           onClick={() => setOptionC(' ')}
-          className="mb-8 flex items-center justify-center gap-2 rounded-xl border border-dashed border-white/10 py-4 text-xs font-bold uppercase tracking-widest text-white/20 transition-all hover:border-white/20 hover:text-white/40"
+          className="mb-8 flex items-center justify-center gap-2 rounded-xl nm-button py-4 text-xs font-bold uppercase tracking-widest text-white/40"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
             <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
@@ -172,8 +172,8 @@ export default function OptionsScreen() {
         disabled={!canContinue}
         className={`w-full rounded-2xl px-6 py-4 text-[15px] font-semibold transition-all duration-300 ${
           canContinue
-            ? 'bg-gradient-to-r from-indigo-500 to-blue-500 text-white shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 active:scale-[0.98]'
-            : 'bg-white/5 text-white/20 cursor-not-allowed'
+            ? 'nm-accent-button text-white'
+            : 'nm-flat text-white/20 cursor-not-allowed'
         }`}
       >
         <span className="flex items-center justify-center gap-2">

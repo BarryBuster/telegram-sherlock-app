@@ -47,18 +47,18 @@ export default function Home() {
   };
 
   return (
-    <div className="mx-auto min-h-dvh max-w-md bg-[#080810]">
+    <div className="mx-auto min-h-dvh max-w-md">
       <Header />
 
       {/* Повідомлення про помилку */}
       {error && (
-        <div className="mx-5 mt-4 flex items-start gap-3 rounded-xl border border-red-500/20 bg-red-500/[0.06] px-4 py-3">
-          <span className="mt-0.5 text-red-400">⚠️</span>
+        <div className="mx-5 mt-4 flex items-start gap-3 rounded-2xl nm-inset border border-red-500/20 px-4 py-4">
+          <span className="mt-0.5 text-red-500">⚠️</span>
           <div className="flex-1">
-            <p className="text-sm text-red-300/80">{error}</p>
+            <p className="text-sm font-medium text-red-400/90">{error}</p>
             <button
               onClick={() => setError(null)}
-              className="mt-1 text-xs text-red-400/50 underline hover:text-red-400/80"
+              className="mt-1 text-[10px] font-bold uppercase tracking-wider text-white/20 hover:text-white/40"
             >
               Закрити
             </button>

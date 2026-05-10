@@ -49,7 +49,7 @@ export default function AnalysisScreen() {
     <div className="flex min-h-[calc(100dvh-120px)] flex-col px-5 pt-8 pb-28">
       {/* Іконка */}
       <div className="mb-6 flex justify-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/10 bg-white/[0.03]">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full nm-flat">
           <svg className="h-8 w-8 animate-pulse text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="3" />
             <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
@@ -72,7 +72,7 @@ export default function AnalysisScreen() {
       </div>
 
       {/* Список критеріїв */}
-      <div className="space-y-1">
+      <div className="space-y-3">
         {CRITERIA.map((criterion) => {
           const status = statuses[criterion.key] || 'pending';
           const isDone = status === 'done';
@@ -83,21 +83,19 @@ export default function AnalysisScreen() {
               key={criterion.key}
               className={`flex items-center justify-between rounded-xl px-4 py-3.5 transition-all duration-500 ${
                 isAnalyzing
-                  ? 'bg-white/[0.04] border border-white/10'
-                  : isDone
-                    ? 'bg-transparent'
-                    : 'bg-transparent'
+                  ? 'nm-inset'
+                  : 'nm-flat-sm'
               }`}
             >
               {/* Ліва частина: іконка + назва */}
               <div className="flex items-center gap-3">
                 {/* Індикатор статусу */}
-                <div className={`flex h-7 w-7 items-center justify-center rounded-full transition-all duration-500 ${
+                <div className={`flex h-8 w-8 items-center justify-center rounded-full transition-all duration-500 ${
                   isDone
-                    ? 'bg-emerald-500/15 text-emerald-400'
+                    ? 'nm-convex text-emerald-400'
                     : isAnalyzing
-                      ? 'bg-indigo-500/15 text-indigo-400'
-                      : 'bg-white/5 text-white/15'
+                      ? 'nm-inset text-indigo-400'
+                      : 'nm-flat-sm text-white/10'
                 }`}>
                   {isDone ? (
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -109,12 +107,12 @@ export default function AnalysisScreen() {
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                     </svg>
                   ) : (
-                    <div className="h-2 w-2 rounded-full bg-white/15" />
+                    <div className="h-2 w-2 rounded-full bg-white/10" />
                   )}
                 </div>
 
                 <span className={`text-[14px] font-medium transition-colors duration-300 ${
-                  isDone ? 'text-white/70' : isAnalyzing ? 'text-white/90' : 'text-white/25'
+                  isDone ? 'text-white/70' : isAnalyzing ? 'text-white/90' : 'text-white/20'
                 }`}>
                   {criterion.labelUk}
                 </span>
@@ -124,26 +122,13 @@ export default function AnalysisScreen() {
               <div className="flex items-center gap-1.5">
                 <span className={`text-[10px] font-semibold tracking-wider transition-colors duration-300 ${
                   isDone
-                    ? 'text-white/30'
+                    ? 'text-white/20'
                     : isAnalyzing
                       ? 'text-indigo-400'
-                      : 'text-white/15'
+                      : 'text-white/10'
                 }`}>
                   {getStatusLabel(status)}
                 </span>
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className={`transition-transform duration-300 ${
-                    isAnalyzing ? 'rotate-180 text-indigo-400' : isDone ? 'text-white/20' : 'text-white/10'
-                  }`}
-                >
-                  <polyline points="6 9 12 15 18 9" />
-                </svg>
               </div>
             </div>
           );
@@ -152,21 +137,21 @@ export default function AnalysisScreen() {
 
       {/* Підсказка для analyzing */}
       {isAnyAnalyzing && !isAllDone && (
-        <div className="mt-4 rounded-xl bg-indigo-500/[0.06] border border-indigo-500/10 px-4 py-3">
-          <p className="text-xs text-indigo-300/60">
+        <div className="mt-6 rounded-xl nm-inset px-4 py-3">
+          <p className="text-xs text-indigo-300/40 text-center italic">
             Іде оцінка ймовірностей відмов… ⏳
           </p>
         </div>
       )}
 
-      {/* Підсказка для фіналізації (коли всі критерії done, але ми ще чекаємо на API) */}
+      {/* Підсказка для фіналізації */}
       {isAllDone && (
-        <div className="mt-4 flex items-center justify-center gap-3 rounded-xl bg-purple-500/[0.06] border border-purple-500/10 px-4 py-4 transition-all duration-500 animate-in fade-in slide-in-from-bottom-2">
-          <svg className="h-4 w-4 animate-spin text-purple-400" viewBox="0 0 24 24" fill="none">
+        <div className="mt-6 flex items-center justify-center gap-3 rounded-xl nm-convex px-4 py-4 transition-all duration-500">
+          <svg className="h-4 w-4 animate-spin text-indigo-400" viewBox="0 0 24 24" fill="none">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
-          <p className="text-xs font-medium tracking-wide text-purple-300/80">
+          <p className="text-xs font-medium tracking-wide text-indigo-300/80">
             Зважуємо бали та формуємо висновок...
           </p>
         </div>

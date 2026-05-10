@@ -39,8 +39,8 @@ export default function BottomNav() {
   const result = useDecisionStore((s) => s.result);
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/[0.04] bg-[#080810]/95 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-md items-center justify-around py-2.5">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 nm-convex border-t border-white/5 pb-[env(safe-area-inset-bottom)]">
+      <div className="mx-auto flex max-w-md items-center justify-around py-3">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.key;
           const isDisabled = tab.key === 'results' && !result;
@@ -50,26 +50,24 @@ export default function BottomNav() {
               key={tab.key}
               onClick={() => !isDisabled && setActiveTab(tab.key)}
               disabled={isDisabled}
-              className={`flex flex-col items-center gap-1 px-5 py-1 transition-all duration-200 ${
+              className={`flex flex-col items-center gap-1.5 px-6 py-2 rounded-2xl transition-all duration-300 ${
                 isActive
-                  ? 'text-indigo-400'
+                  ? 'nm-inset text-indigo-400'
                   : isDisabled
-                    ? 'text-white/[0.12] cursor-not-allowed'
-                    : 'text-white/30 hover:text-white/60'
+                    ? 'text-white/5 cursor-not-allowed'
+                    : 'text-white/20 hover:text-white/40'
               }`}
             >
-              <span className={`transition-transform duration-200 ${isActive ? 'scale-110' : ''}`}>
+              <span className={`transition-transform duration-300 ${isActive ? 'scale-105' : ''}`}>
                 {tab.icon}
               </span>
-              <span className={`text-[9px] font-bold tracking-[0.12em] ${isActive ? 'text-indigo-400' : ''}`}>
+              <span className="text-[9px] font-bold tracking-[0.15em]">
                 {tab.label}
               </span>
             </button>
           );
         })}
       </div>
-      {/* Safe area для iPhone */}
-      <div className="h-[env(safe-area-inset-bottom)]" />
     </nav>
   );
 }
